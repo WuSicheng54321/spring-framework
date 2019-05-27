@@ -400,6 +400,7 @@ public abstract class StringUtils {
 
 		int capacity = inString.length();
 		if (newPattern.length() > oldPattern.length()) {
+			// 为什么要加16
 			capacity += 16;
 		}
 		StringBuilder sb = new StringBuilder(capacity);
@@ -407,6 +408,7 @@ public abstract class StringUtils {
 		int pos = 0;  // our position in the old string
 		int patLen = oldPattern.length();
 		while (index >= 0) {
+			// 查找下标值，然后逐步替换
 			sb.append(inString.substring(pos, index));
 			sb.append(newPattern);
 			pos = index + patLen;
@@ -636,6 +638,7 @@ public abstract class StringUtils {
 		if (!hasLength(path)) {
 			return path;
 		}
+		// 替换window的资源符号\\为/
 		String pathToUse = replace(path, WINDOWS_FOLDER_SEPARATOR, FOLDER_SEPARATOR);
 
 		// Strip prefix from path to analyze, to not treat it as part of the

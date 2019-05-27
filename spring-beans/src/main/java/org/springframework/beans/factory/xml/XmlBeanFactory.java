@@ -26,6 +26,8 @@ import org.springframework.core.io.Resource;
  * from an XML document. Delegates to {@link XmlBeanDefinitionReader} underneath; effectively
  * equivalent to using an XmlBeanDefinitionReader with a DefaultListableBeanFactory.
  *
+ * 通过XML文档读取Bean
+ *
  * <p>The structure, element and attribute names of the required XML document
  * are hard-coded in this class. (Of course a transform could be run if necessary
  * to produce this format). "beans" doesn't need to be the root element of the XML
@@ -62,6 +64,8 @@ public class XmlBeanFactory extends DefaultListableBeanFactory {
 	 * which must be parsable using DOM.
 	 * @param resource the XML resource to load bean definitions from
 	 * @throws BeansException in case of loading or parsing errors
+	 *
+	 * 加载Resource资源
 	 */
 	public XmlBeanFactory(Resource resource) throws BeansException {
 		this(resource, null);

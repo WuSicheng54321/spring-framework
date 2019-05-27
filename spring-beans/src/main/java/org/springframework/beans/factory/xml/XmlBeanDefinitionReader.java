@@ -313,26 +313,32 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 */
 	public int loadBeanDefinitions(EncodedResource encodedResource) throws BeanDefinitionStoreException {
 		Assert.notNull(encodedResource, "EncodedResource must not be null");
+		// WSCL 不是说可以自动打印日记级别，为什么这里还需要判断
 		if (logger.isTraceEnabled()) {
 			logger.trace("Loading XML bean definitions from " + encodedResource);
 		}
-
+		// WSCL 获取当前的Resource Set，否则创建一个，相当于缓存了一个，而且是本线程缓存的
 		Set<EncodedResource> currentResources = this.resourcesCurrentlyBeingLoaded.get();
 		if (currentResources == null) {
 			currentResources = new HashSet<>(4);
 			this.resourcesCurrentlyBeingLoaded.set(currentResources);
 		}
+		// 将当前的encodeResource加入到Set当中，加入失败抛出异常
 		if (!currentResources.add(encodedResource)) {
 			throw new BeanDefinitionStoreException(
 					"Detected cyclic loading of " + encodedResource + " - check your import definitions!");
 		}
 		try {
+			// 获取输入流
 			InputStream inputStream = encodedResource.getResource().getInputStream();
 			try {
+				// 封装成xml文件
 				InputSource inputSource = new InputSource(inputStream);
 				if (encodedResource.getEncoding() != null) {
+					// 如果指定的编码不为空，就指定编码，排除乱码的问题
 					inputSource.setEncoding(encodedResource.getEncoding());
 				}
+				// 从XML文件当中加载Bean
 				return doLoadBeanDefinitions(inputSource, encodedResource.getResource());
 			}
 			finally {
