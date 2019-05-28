@@ -87,6 +87,7 @@ public class XmlValidationModeDetector {
 	 * @see #VALIDATION_DTD
 	 * @see #VALIDATION_XSD
 	 */
+	// 自动验证，看其是使用DTD的验证还是XSD的验证
 	public int detectValidationMode(InputStream inputStream) throws IOException {
 		// Peek into the file to look for DOCTYPE.
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -98,6 +99,7 @@ public class XmlValidationModeDetector {
 				if (this.inComment || !StringUtils.hasText(content)) {
 					continue;
 				}
+				// 判断的标准是看文件当中是否有 DOCTYPE 的字眼
 				if (hasDoctype(content)) {
 					isDtdValidated = true;
 					break;

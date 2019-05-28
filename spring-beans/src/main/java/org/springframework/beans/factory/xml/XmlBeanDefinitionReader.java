@@ -383,6 +383,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 
 	/**
+	 * 读取xml文件并转化成Bean
+	 *
 	 * Actually load bean definitions from the specified XML file.
 	 * @param inputSource the SAX InputSource to read from
 	 * @param resource the resource descriptor for the XML file
@@ -395,7 +397,9 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			throws BeanDefinitionStoreException {
 
 		try {
+			// 加载文件，变成Document
 			Document doc = doLoadDocument(inputSource, resource);
+			// 通过Document注册成Bean
 			int count = registerBeanDefinitions(doc, resource);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Loaded " + count + " bean definitions from " + resource);
@@ -438,6 +442,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 */
 	protected Document doLoadDocument(InputSource inputSource, Resource resource) throws Exception {
 		return this.documentLoader.loadDocument(inputSource, getEntityResolver(), this.errorHandler,
+				// 检验模式放到这里来了
 				getValidationModeForResource(resource), isNamespaceAware());
 	}
 
@@ -449,11 +454,15 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * mode, even when something other than {@link #VALIDATION_AUTO} was set.
 	 * @see #detectValidationMode
 	 */
+	// WSCL 检验模式，验证xml文件是使用DTD还是XSD
 	protected int getValidationModeForResource(Resource resource) {
+		// 通过查询去替代获取常量
 		int validationModeToUse = getValidationMode();
 		if (validationModeToUse != VALIDATION_AUTO) {
+			// 手动指定的方式
 			return validationModeToUse;
 		}
+		// 没有指定使用自动指定
 		int detectedMode = detectValidationMode(resource);
 		if (detectedMode != VALIDATION_AUTO) {
 			return detectedMode;
@@ -492,6 +501,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		}
 
 		try {
+			// 委托给validationModeDetector进行处理
 			return this.validationModeDetector.detectValidationMode(inputStream);
 		}
 		catch (IOException ex) {
@@ -513,7 +523,9 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see #setDocumentReaderClass
 	 * @see BeanDefinitionDocumentReader#registerBeanDefinitions
 	 */
+	// 将Document注册成Bean
 	public int registerBeanDefinitions(Document doc, Resource resource) throws BeanDefinitionStoreException {
+		//
 		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
 		int countBefore = getRegistry().getBeanDefinitionCount();
 		documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
